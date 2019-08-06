@@ -151,7 +151,7 @@ class ProgressBar(ScreenHandle):
 
         self.blit(font.render(f'{self.engine.hero.hp}/{self.engine.hero.max_hp}', True, colors["black"]),
                   (60, 30))
-        self.blit(font.render(f'{self.engine.hero.exp}/{(100*(2**(self.engine.hero.level-1)))}', True, colors["black"]),
+        self.blit(font.render(f'{self.engine.hero.exp}/{(100*self.engine.hero.level*4)}', True, colors["black"]),
                   (60, 70))
 
         self.blit(font.render(f'Level', True, colors["black"]),

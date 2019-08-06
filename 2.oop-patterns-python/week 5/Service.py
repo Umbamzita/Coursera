@@ -268,7 +268,7 @@ class SpecialMap(MapFactory):
 
             for obj_name in object_list_prob['enemies']:
                 prop = object_list_prob['enemies'][obj_name]
-                for i in range(random.randint(0, 5)):
+                for i in range(random.randint(0, 70)):
                     coord = (random.randint(1, 37), random.randint(1, 9))
                     intersect = True
                     while intersect:
