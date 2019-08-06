@@ -94,12 +94,14 @@ class Enemy(Creature, Interactive):
    
     def interact(self, engine, hero):
         
-        #power = (hero.stats["strength"] + hero.stats["endurance"]) / (self.stats["strength"] + self.stats["endurance"])
-        #if power >= 1:
+        
         if random.randint(1,3) == 1:
-            hero.hp -=self.hp/10
-            if hero.hp >0:
+            hero.hp -= int(self.hp/10)
+            if hero.hp > 0:
                 hero.exp += self.exp
+                for m in hero.level_up():
+                    engine.notify(m)
+                
                 engine.notify(f'You earn {self.exp} expirience')
             else:
                 engine.notify("Game Over")
@@ -107,6 +109,9 @@ class Enemy(Creature, Interactive):
                 engine.game_process = False
         else:
             hero.exp += self.exp
+            for m in hero.level_up():
+                engine.notify(m)
+           
             engine.notify(f'You earn {self.exp} expirience')
         
  
@@ -125,14 +130,15 @@ class Hero(Creature):
         super().__init__(icon, stats, pos)
 
     def level_up(self):
-        while self.exp >= 100 * (2 ** (self.level - 1)):
-            
+        while self.exp >= 100 * self.level * 8:
+            yield "Level up!"
             self.level += 1
             self.stats["strength"] += 2
             self.stats["endurance"] += 2
             self.calc_max_HP()
             self.hp = self.max_hp
-            yield "level up!"
+            
+            
             
     def level_next(self):
         
@@ -142,7 +148,7 @@ class Hero(Creature):
         self.stats["endurance"] += 2
         self.stats["luck"] += 2
         self.calc_max_HP()
-        self.hp = self.max_hp
+        self.hp = int(self.max_hp)
         
 
 
