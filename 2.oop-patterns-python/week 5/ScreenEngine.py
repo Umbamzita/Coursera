@@ -124,61 +124,62 @@ class ProgressBar(ScreenHandle):
     def connect_engine(self, engine):
         self.engine=engine
         super().connect_engine(engine)
-        
-        
+    
 
     def draw(self, canvas):
         self.fill(colors["wooden"])
         pygame.draw.rect(self, colors["black"], (50, 30, 200, 30), 2)
         pygame.draw.rect(self, colors["black"], (50, 70, 200, 30), 2)
 
-        pygame.draw.rect(self, colors[
-                         "red"], (50, 30, 200 * self.engine.hero.hp / self.engine.hero.max_hp, 30))
-        pygame.draw.rect(self, colors["green"], (50, 70,
-                                                 100 * self.engine.hero.exp / 100*self.engine.hero.level*8, 30))
+        if self.engine.hero:
+            pygame.draw.rect(self, colors[
+                             "red"], (50, 30, 200 * self.engine.hero.hp / self.engine.hero.max_hp, 30))
+            pygame.draw.rect(self, colors["green"],
+                             (50, 70,
+                              0.2 * self.engine.hero.exp / self.engine.hero.level, 30))
 
-        font = pygame.font.SysFont("comicsansms", 20)
-        self.blit(font.render(f'Hero at {self.engine.hero.position}', True, colors["black"]),
-                  (250, 0))
+            font = pygame.font.SysFont("comicsansms", 20)
+            self.blit(font.render(f'Hero at {self.engine.hero.position}', True, colors["black"]),
+                      (250, 0))
 
-        self.blit(font.render(f'{self.engine.level} floor', True, colors["black"]),
-                  (10, 0))
+            self.blit(font.render(f'{self.engine.level} floor', True, colors["black"]),
+                      (10, 0))
 
-        self.blit(font.render(f'HP', True, colors["black"]),
-                  (10, 30))
-        self.blit(font.render(f'Exp', True, colors["black"]),
-                  (10, 70))
+            self.blit(font.render(f'HP', True, colors["black"]),
+                      (10, 30))
+            self.blit(font.render(f'Exp', True, colors["black"]),
+                      (10, 70))
 
-        self.blit(font.render(f'{self.engine.hero.hp}/{self.engine.hero.max_hp}', True, colors["black"]),
-                  (60, 30))
-        self.blit(font.render(f'{self.engine.hero.exp}/{(100*self.engine.hero.level*8)}', True, colors["black"]),
-                  (60, 70))
+            self.blit(font.render(f'{self.engine.hero.hp}/{self.engine.hero.max_hp}', True, colors["black"]),
+                      (60, 30))
+            self.blit(font.render(f'{self.engine.hero.exp}/{100*(self.engine.hero.level*8)}',
+                                  True, colors["black"]),
+                      (60, 70))
 
-        self.blit(font.render(f'Level', True, colors["black"]),
-                  (300, 30))
-        self.blit(font.render(f'Gold', True, colors["black"]),
-                  (300, 70))
+            self.blit(font.render(f'Level', True, colors["black"]),
+                      (300, 30))
+            self.blit(font.render(f'Gold', True, colors["black"]),
+                      (300, 70))
 
-        self.blit(font.render(f'{self.engine.hero.level}', True, colors["black"]),
-                  (360, 30))
-        self.blit(font.render(f'{self.engine.hero.gold}', True, colors["black"]),
-                  (360, 70))
+            self.blit(font.render(f'{self.engine.hero.level}', True, colors["black"]),
+                      (360, 30))
+            self.blit(font.render(f'{self.engine.hero.gold}', True, colors["black"]),
+                      (360, 70))
 
-        self.blit(font.render(f'Str', True, colors["black"]),
-                  (420, 30))
-        self.blit(font.render(f'Luck', True, colors["black"]),
-                  (420, 70))
+            self.blit(font.render(f'Str', True, colors["black"]),
+                      (420, 30))
+            self.blit(font.render(f'Luck', True, colors["black"]),
+                      (420, 70))
 
-        self.blit(font.render(f'{self.engine.hero.stats["strength"]}', True, colors["black"]),
-                  (480, 30))
-        self.blit(font.render(f'{self.engine.hero.stats["luck"]}', True, colors["black"]),
-                  (480, 70))
+            self.blit(font.render(f'{self.engine.hero.stats["strength"]}', True, colors["black"]),
+                      (480, 30))
+            self.blit(font.render(f'{self.engine.hero.stats["luck"]}', True, colors["black"]),
+                      (480, 70))
 
-        self.blit(font.render(f'SCORE', True, colors["black"]),
-                  (550, 30))
-        self.blit(font.render(f'{self.engine.score:.4f}', True, colors["black"]),
-                  (550, 70))
-                  
+            self.blit(font.render(f'SCORE', True, colors["black"]),
+                      (550, 30))
+            self.blit(font.render(f'{self.engine.score:.4f}', True, colors["black"]),
+                      (550, 70))
         super().draw(canvas)
 
 

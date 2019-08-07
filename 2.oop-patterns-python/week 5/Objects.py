@@ -72,7 +72,7 @@ class Creature(AbstractObject):
         self.hp = self.max_hp
 
     def calc_max_HP(self):
-        self.max_hp = 5 + self.stats["endurance"] * 2
+        self.max_hp = 5 + self.stats["endurance"] * 3
         
     def draw(self, display):
         display.draw_object(self.sprite, self.position)
@@ -95,14 +95,15 @@ class Enemy(Creature, Interactive):
     def interact(self, engine, hero):
         
         
-        if random.randint(1,3) == 1:
-            hero.hp -= int(self.hp/10)
+        if random.randint(1,2) == 1:
+            hero.hp -= int(self.hp/5)
+            engine.notify(f'Enemy hit {int(self.hp/5)} damage')
             if hero.hp > 0:
                 hero.exp += self.exp
                 for m in hero.level_up():
                     engine.notify(m)
                 
-                engine.notify(f'You earn {self.exp} expirience')
+                engine.notify(f'You earned {self.exp} expirience')
             else:
                 engine.notify("Game Over")
                 engine.notify("Please, RESTART the GAME")
@@ -112,7 +113,7 @@ class Enemy(Creature, Interactive):
             for m in hero.level_up():
                 engine.notify(m)
            
-            engine.notify(f'You earn {self.exp} expirience')
+            engine.notify(f'You earned {self.exp} expirience')
         
  
 
