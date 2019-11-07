@@ -1,0 +1,70 @@
+#navbarNav { 
+	
+	font-size: 18px;
+	padding-left: 30px;
+
+}
+
+
+
+
+.navbar-brand {
+	font-size: 36px;
+	padding-left: 40px;
+	font-family: Geneva, Arial, Helvetica, sans-serif;
+	
+}
+
+.nav-link {
+	text-decoration: underline;
+	display: inline;
+}
+
+.tags a{
+	text-decoration: underline;
+}
+
+#avatar-large {
+	
+    width: 80px;
+    height: 100px;
+    background: #0f75d4;
+	border: 1px solid navy;
+}
+
+#avatar-mini {
+	width: 50px;
+    height: 60px;
+	border: 1px solid navy;
+    background: #a2ccf2;
+	
+}
+
+.popular-tag a {
+	
+	color: black;
+	font: 18px Georgia, Times, serif;
+		
+}
+.container-row-middle, .container-row-top {
+    margin-bottom: 20px;
+}
+.container-row-top {
+	border-bottom : 2px solid navy;
+	padding: 20px;
+}
+
+.container-row-middle {
+	border: 2px solid #ccc;
+    padding: 20px;
+	
+}
+.qty {
+	border: none;
+	
+}
+
+
+.best-members, .popular-tags {
+	padding: 20px;
+}
