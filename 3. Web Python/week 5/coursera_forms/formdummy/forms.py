@@ -5,6 +5,6 @@ class DummyForm(forms.Form):
 	grade = forms.IntegerField(label='Оценка',min_value=1, max_value=100)
 	image=forms.FileField(label='Фотография', required = False)
 
-	def clean_text(self):
-		if 'abc' not in self.cleaned_data['text']:
-			raise forms.ValidationError('Вы не о том пишите')
+	# def clean_text(self):
+	# 	if 'abc' not in self.cleaned_data['text']:
+	# 		raise forms.ValidationError('Вы не о том пишите')
