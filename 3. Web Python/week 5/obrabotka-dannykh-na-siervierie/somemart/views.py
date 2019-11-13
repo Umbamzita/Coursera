@@ -1,4 +1,7 @@
 import json
+from jsonschema import validate 
+from jsonschema.exceptions import ValidationError
+
 
 from django.http import HttpResponse, JsonResponse
 from django.views import View
@@ -9,60 +12,85 @@ from .models import Item, Review
 from django.forms.models import model_to_dict
 
 
+REVIEW_SCHEMA = {
+    '$schema': 'http://json-schema.org/schema#',
+    'type': 'object',
+    'properties': {
+        'title': {
+            'type': 'string',
+            'minLength': 1,
+            'maxLength': 64,
+            },
+        'description': {
+            'type': 'string',
+            'minLength': 1,
+            'maxLength': 1024,
+            },
+        'price': {
+            'type': 'integer',
+            'minimum': 1,
+            'maximum': 1000000
+        }
+    },
+    'required': ['title', 'description', 'price'],
+}
 
+REVIEW_SCHEMA_REVIEW = {
+    '$schema': 'http://json-schema.org/schema#',
+    'type': 'object',
+    'properties': {
+        'text': {
+            'type': 'string',
+            'minLength': 1,
+            'maxLength': 1024,
+            },
+        'grade': {
+            'type': 'integer',
+            'minimum': 1,
+            'maximum': 10
+        }
+    },
+    'required': ['text', 'grade'],
+}
 
-
-
-class ItemForm(forms.Form):
-    title = forms.CharField(max_length=64)
-    description = forms.CharField(max_length=1024)
-    price = forms.IntegerField(min_value=1, max_value=1000000)
-
-class ReviewForm(forms.Form):
-    text = forms.CharField(min_length=1, max_length=1024)
-    grade = forms.IntegerField(min_value=1, max_value=10)
-    
-
-
-
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class AddItemView(View):
 
     def post(self, request):
-        
-        form = ItemForm(request.POST)
+        try:
+            document = json.loads(request.body.decode('utf-8'))
+            validate(document, REVIEW_SCHEMA)
+            m = Item.objects.create(**document)
+            m.save()
+            return JsonResponse({"id" : m.id}, status=201)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "JsonDecoder"}, status=400)
+        except ValidationError as exc:
+            return JsonResponse({"error": exc.message}, status=400)
 
-        if form.is_valid():
-            data=form.cleaned_data
-            m=Item.objects.create(**data)
-            id=m.id
-            return JsonResponse({'id' : id}, status=201, safe=False)
-        return JsonResponse({}, status=400, safe=False, json_dumps_params={'ensure_ascii': False})
-        
-            
-
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class PostReviewView(View):
     
-
     def post(self, request, item_id):
         try:
-            item=Item.objects.get(id=item_id)
-
+            document = json.loads(request.body.decode('utf-8'))
+            validate(document, REVIEW_SCHEMA_REVIEW)
+            product = Item.objects.get(id = item_id)
+            m = Review.objects.create(grade = document['grade'],\
+                text = document['text'], item = product)
+            m.save()
+            return JsonResponse({'id' : m.id}, status=201)
+        except ValidationError as exc:
+            return JsonResponse({"error": exc.message}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "JsonDecoder"}, status=400)
         except:
-            return JsonResponse('товара с таким id не существует', status=404, safe=False, json_dumps_params={'ensure_ascii': False})
-
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            
-            message=form.cleaned_data['text']
-            num=form.cleaned_data['grade']
-            m=Review.objects.create(text=message, grade=num, item=Item.objects.get(id=item_id))
-            return JsonResponse({'id':m.id}, status=201, safe=False, json_dumps_params={'ensure_ascii': False})
-        return JsonResponse('запрос не прошел валидацию', status=400, safe=False, json_dumps_params={'ensure_ascii': False})    
+            return JsonResponse({"error": "product not found"}, status=404) 
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+
+
+@method_decorator(csrf_exempt, name="dispatch")
 class GetItemView(View):
 
     def get(self, request, item_id):
@@ -73,7 +101,7 @@ class GetItemView(View):
 
         item_good=model_to_dict(data)
         
-        review_good=Review.objects.filter(item_id=item_id).order_by('-id').values('id','text','grade')[:5]
+        review_good=Review.objects.filter(item_id=item_id).order_by("-id").values("id","text","grade")[:5]
 
-        item_good['reviews']=list(review_good)
-        return JsonResponse(item_good, status=200, safe=False, json_dumps_params={'ensure_ascii': False})
+        item_good["reviews"]=list(review_good)
+        return JsonResponse(item_good, status=200, safe=False, json_dumps_params={"ensure_ascii": False})
