@@ -4,33 +4,23 @@ from django.http import JsonResponse
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 from django.views import View
+from django.views.generic.edit import CreateView
 from marshmallow import ValidationError as MarshmallowError
 from .forms import DummyForm
 from .schemas import REVIEW_SCHEMA, ReviewSchema
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-
-
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from .models import FeedBack
+
 
 #login=hello password=world
-class FormDummyView(LoginRequiredMixin,View):
+class FeedBackCreateView(LoginRequiredMixin,CreateView):
+	model = FeedBack
+	fields = ['text', 'grade', 'subject']
+	success_url = '/feedback/add'
 
-	def get(self, request):
-		#hello = request.GET.get('hello')
-		form = DummyForm()
-		return render(request, 'form.html', {'form': form})
-
-	def post(self,request):
-		
-		form = DummyForm(request.POST)
-		if form.is_valid():
-			context=form.cleaned_data
-			return render(request, 'form.html', context)
-		else:
-			return render(request, 'error.html', {})
-
+	
 @method_decorator(csrf_exempt, name='dispatch')
 class SchemaView(View):
 
