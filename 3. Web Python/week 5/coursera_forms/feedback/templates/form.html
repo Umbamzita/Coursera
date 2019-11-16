@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Tag form</title>
+	</head>
+	<body>
+		<h1>Форма отзыва</h1>
+		<form method="post" enctype="multipart/form-data" action="/form/">
+			{% csrf_token %}
+			{{ form }}
+			<!-- <label for='feedback-text'>Отзыв: </label>
+			<input id="feedback-text" type="text" name="text" minlength="5">
+
+			<label for='feedback-grade'>Оценка: </label>
+			<input id="feedback-grade" type="number" name="grade" min=0 max=100 required='True'>
+
+			<label for='feedback-grade'>Фотография: </label>
+			<input id="feedback-image" type="file" name="image" > -->
+
+			<input id="feedback-submit" type="submit" >
+		</form>
+		{{ text }}
+		{{ grade }}
+		{{ content }}
+	</body>
+</html>
